@@ -66,14 +66,24 @@ const handleFactorAuth = async (formData: FormData) => {
   const email = formData.get('email') as string;
   const verifyCode = formData.get('verifyCode') as string;
 
+  //formData: FormData, searchParams: { message: string, code: string}
+
+  console.log('Email:', email);
+  console.log('Verification code:', verifyCode);
+
   // Retrieve the saved verification code
   const { data, error } = await supabase
     .from('auth_2fa')
     .select('code')
     .eq('email', email)
-    .single();
+    .order('created_at', { ascending: false })
+    .limit(1);
 
-  if (error || !data || data.code !== verifyCode) {
+  console.log('Subapase data:', data);
+  console.log('Supabase error:', error);
+
+
+  if (error || !data || data.length === 0 || data[0].code !== verifyCode) {
     return { error: 'Invalid verification code' };
   }
 

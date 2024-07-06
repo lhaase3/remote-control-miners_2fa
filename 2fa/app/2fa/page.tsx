@@ -1,21 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import handleFactorAuth from './action';
 import { SubmitButton } from './submit-button';
+import { useSearchParams } from 'next/navigation';
 
-export default function Verify({ searchParams }: { searchParams: { message: string } }) {
+export default function Verify() {
   const [verifyCode, setVerifyCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (searchParams) {
+      const emailParam = searchParams.get('email');
+      setEmail(emailParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setMessage('');
 
+    if(!email) {
+      setError('No email found');
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
+    formData.append('email',email);
 
     const result = await handleFactorAuth(formData);
 

@@ -149,8 +149,8 @@ export default function Login({
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const supabase = createClient();
-    console.log(email);
-    console.log(password);
+    // console.log(email);
+    // console.log(password);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -160,20 +160,10 @@ export default function Login({
       return redirect("/login?message=Could not authenticate user");
     }
 
-    // Check if MFA is required
-    //const { data: mfaData, error: mfaError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-
-    // if (mfaError) {
-    //   return redirect("/login?message=Could not retrieve MFA status");
-    // }
-
-    // if (mfaData.nextLevel === 'aal2' && mfaData.nextLevel !== mfaData.currentLevel) {
-    //   return redirect("/2fa");
-    // }
     await send2FAEmail(email);
 
     //return redirect("/protected");
-    return redirect("/2fa");
+    return redirect(`/2fa?email=${encodeURIComponent(email)}`);
   };
 
   return (
