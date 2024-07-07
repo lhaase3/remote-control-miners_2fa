@@ -10,9 +10,10 @@ export default function Verify() {
   const [verifyCode, setVerifyCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const [email, setEmail] = useState<string | null>(null);
+  const searchParams = useSearchParams(); // hook to access the URL search parameters
+  const [email, setEmail] = useState<string | null>(null); // state to hold the email extracted from the URL
 
+  // Effect to extract the email from URL parameters when the component mounts or searchParams change
   useEffect(() => {
     if (searchParams) {
       const emailParam = searchParams.get('email');
@@ -20,6 +21,8 @@ export default function Verify() {
     }
   }, [searchParams]);
 
+
+  // handler for form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -30,12 +33,13 @@ export default function Verify() {
       return;
     }
 
-    const formData = new FormData(e.currentTarget);
+
+    const formData = new FormData(e.currentTarget); // create a FormData object from the form
     formData.append('email',email);
 
     const result = await handleFactorAuth(formData);
 
-    if (result.error) {
+    if (result?.error) {
       setError(result.error);
     } else {
       setMessage('Verification successful!');
@@ -86,11 +90,11 @@ export default function Verify() {
         </SubmitButton>
         {message && <p className="mt-4 p-4 bg-green-100 text-green-700 text-center">{message}</p>}
       </form>
-      {searchParams?.message && (
+      {/* {searchParams?.message && (
         <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
           {searchParams.message}
         </p>
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link"
-import { createClient } from '@/utils/supabase/server'
 import { useState } from 'react'
 import handleForgotPassword from './action'
 import { SubmitButton } from './submit-button'
@@ -11,14 +10,17 @@ export default function ForgotPassword({ searchParams }: { searchParams: { messa
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // handler for form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setMessage(null);
   
+    // create a FormData object with the email
     const formData = new FormData();
     formData.append('email', email);
   
+    // call the handleForgotPassword to send the email based off the formData
     const result = await handleForgotPassword(formData);
   
     if (result.error) {
@@ -31,7 +33,7 @@ export default function ForgotPassword({ searchParams }: { searchParams: { messa
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <Link
-        href="/"
+        href="/login"
         className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
       >
         <svg
@@ -69,7 +71,7 @@ export default function ForgotPassword({ searchParams }: { searchParams: { messa
           className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
           pendingText="Sending..."
         >
-          Send Reset Email
+          Confirm
         </SubmitButton>
       </form>
       {message && <p className="text-green-500">{message}</p>}

@@ -1,49 +1,4 @@
 
-// // 'use client';
-
-// import { SubmitButton } from './submit-button';
-// //import handleUpdatePassword from './action';
-// import Link from 'next/link';
-// import { createClient } from '@/utils/supabase/server';
-// import { redirect } from 'next/navigation'; 
-
-// export default async function UpdatePassword({ searchParams }: { searchParams: { message: string, code: string } }) {
-
-//   const updatePassword = async (formData: FormData) => {
-//     'use server';
-
-//     const password = formData.get("password") as string;
-//     const confirmPassword = formData.get("confirm_password") as string;
-//     const supabase = createClient();
-
-//     if (searchParams.code) {
-//       //const supabase = createClient();
-//       const { error }: { error: any } =  await supabase.auth.exchangeCodeForSession(
-//         searchParams.code
-//       );
-
-//       if (error) {
-//         return redirect(
-//           '/updatePassword?message=Unable to reset password. link expired!'
-//         );
-//       }
-//     }
-
-//     const { error } = await supabase.auth.updateUser({
-//       password,
-//     });
-
-//     if (error) {
-//       return redirect(
-//         '/updatePassword?message=Unable to reset password. try again!'
-//       );
-//     }
-
-//     redirect(
-//       '/login?message=Your password has been reset successfully'
-//     );
-//   };
-
 'use client';
 
 import { SubmitButton } from './submit-button';
@@ -54,31 +9,20 @@ import Link from 'next/link';
 export default function UpdatePassword({ searchParams }: { searchParams: { message: string, code: string } }) {
 
   const [error, setError] = useState<string | null>(null);
-  //const [message, setMessage] = useState<string | null>(null);
 
+  // handler for form submission
   const handleSubmit = async (formData: FormData) => {
     setError(null);
+
+    // handle the response from handleUpdatePassword
     const result = await handleUpdatePassword(formData, { message: searchParams.message, code: searchParams.code });
     if(result.error) {
       setError(result.error);
       return;
     }
-
+    // redirect to login page if it was a success
     window.location.href = '/login?message=Your password has been reset successfully';
   };
-
-  
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.currentTarget);
-
-  //   const result = await handleUpdatePassword(formData, { message: searchParams.message as string, code: searchParams.code as string });
-
-  //   if (result.error) {
-  //     setError(result.error ?? null);
-  //     setMessage(null);
-  //   }
-  // };
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
@@ -126,11 +70,10 @@ export default function UpdatePassword({ searchParams }: { searchParams: { messa
         />
         <SubmitButton
           formAction={handleSubmit}
-          // formAction={updatePassword}
           className="bg-green-700 border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
           pendingText="Updating..."
         >
-          Update Password
+          Confirm
         </SubmitButton>
       </form>
     </div>

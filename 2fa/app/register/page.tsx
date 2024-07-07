@@ -10,23 +10,18 @@ export default function Register({ searchParams }: { searchParams: { message: st
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  // handler for form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submission triggered");
     const formData = new FormData(e.currentTarget);
 
-    console.log("Submitting Form Data:", Object.fromEntries(formData.entries()));
-
+    // Call the handleSignUp function to handle user registration 
     const result = await handleSignUp(formData);
 
-    console.log("Sign Up Result:", result);
-
     if (result.error) {
-      console.log("Error received in client-side:", result.error);
       setError(result.error ?? null);
       setMessage(null);
     } else {
-      console.log("Success message received in client-side:", result.data);
       setMessage(result.data ?? null);
       setError(null);
     }
@@ -35,7 +30,7 @@ export default function Register({ searchParams }: { searchParams: { message: st
   return (
     <div className='flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2'>
       <Link
-        href='/'
+        href='/login'
         className='absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm'
       >
         <svg
